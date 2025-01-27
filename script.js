@@ -29,9 +29,10 @@ function divide(a, b) {
     return a / b;
 }
 
-let firstNumber = 0 
-let secondNumber = 0
-let operator = String
+let firstNumber = '';
+let secondNumber = '';
+let operator = '';
+let isEnteringSecondNumber = false; // Tracks whether the user is entering the second number
 
 function operate(firstNumber, secondNumber, operator) {
     switch (operator) {
@@ -49,14 +50,45 @@ function operate(firstNumber, secondNumber, operator) {
 }
 
 const display = document.querySelector('#display');
-const numberButtons = document.querySelectorAll('#key number');
+const numberButtons = document.querySelectorAll('.button-number');
+const operatorButtons = document.querySelectorAll('.button-operator');
+const clearButton = document.querySelector('#clear');
 
 numberButtons.forEach(button => {
     button.addEventListener("click", () => {
         const buttonValue = button.textContent;
-        updateDisplay(buttonValue);
+        if (isEnteringSecondNumber) {
+            secondNumber += buttonValue;
+            updateDisplay(buttonValue);
+            console.log(secondNumber); // Debugging
+        } else {
+            firstNumber += buttonValue;
+            updateDisplay(buttonValue);
+            console.log(firstNumber); // Debugging
+        }
     })
 })
+
+operatorButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        if (firstNumber === '') return;
+
+        operator = button.textContent;
+        isEnteringSecondNumber = true;
+        display.textContent = 0;
+
+        console.log(operator); // Debugging
+        console.log(isEnteringSecondNumber); // Debugging
+    })
+})
+
+clearButton.addEventListener('click', () => {
+  firstNumber = '';
+  operator = '';
+  secondNumber = '';
+  isEnteringSecondNumber = false;
+  display.textContent = '0'; // Reset the display
+});
 
 function updateDisplay(value) {
     if (display.textContent === '0') {
