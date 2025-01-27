@@ -47,3 +47,21 @@ function operate(firstNumber, secondNumber, operator) {
             throw new Error('Invalid operator');
     }
 }
+
+const display = document.querySelector('#display');
+const numberButtons = document.querySelectorAll('#key number');
+
+numberButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        const buttonValue = button.textContent;
+        updateDisplay(buttonValue);
+    })
+})
+
+function updateDisplay(value) {
+    if (display.textContent === '0') {
+        display.textContent = value;
+    } else {
+        display.textContent += value;
+    }
+}
