@@ -34,6 +34,7 @@ let secondNumber = '';
 let operator = '';
 let isEnteringSecondNumber = false; // Tracks whether the user is entering the second number
 let operatorSet = false; // Tracks whether the user has selected an operator
+let decimilSelected = false; // Tracks whether the user has selected a decimil point
 
 function operate(firstNumber, secondNumber, operator) {
     switch (operator) {
