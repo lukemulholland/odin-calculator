@@ -33,6 +33,7 @@ let firstNumber = '';
 let secondNumber = '';
 let operator = '';
 let isEnteringSecondNumber = false; // Tracks whether the user is entering the second number
+let operatorSet = false; // Tracks whether the user has selected an operator
 
 function operate(firstNumber, secondNumber, operator) {
     switch (operator) {
@@ -71,11 +72,17 @@ const operatorButtons = document.querySelectorAll('.button-operator');
 
 operatorButtons.forEach(button => {
     button.addEventListener("click", () => {
-        if (firstNumber === '') return;
+        if (firstNumber === '') return; // Do nothing if missing first number
 
-        operator = button.textContent;
-        isEnteringSecondNumber = true;
-        display.textContent = 0;
+        if (operatorSet) { // Replace current operator if already set
+            operator = button.textContent; 
+            display.textContent = operator;
+        } else {
+            operator = button.textContent;
+            operatorSet = true;
+            isEnteringSecondNumber = true;
+            display.textContent = operator;
+        }
     })
 })
 
@@ -97,9 +104,10 @@ equalsButton.addEventListener('click', () => {
     const result = operate(num1, num2, operator);
     display.textContent = Number.isInteger(result) ? result : result.toFixed(4);
 
-    firstNumber = result;
+    firstNumber = result; // Store result in first number to allow for subsequent calculation
     secondNumber = '';
     isEnteringSecondNumber = false;
+    operatorSet = false;
     console.log('firstNum: ' + firstNumber); // Debugging
     console.log('secondNum: ' + secondNumber); // Debugging
     console.log('result: ' + result); // Debugging
