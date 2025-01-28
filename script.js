@@ -53,22 +53,23 @@ const display = document.querySelector('#display');
 const numberButtons = document.querySelectorAll('.button-number');
 const operatorButtons = document.querySelectorAll('.button-operator');
 const clearButton = document.querySelector('#clear');
+const equalsButton = document.querySelector('#equals');
 
+// Register input from number buttons
 numberButtons.forEach(button => {
     button.addEventListener("click", () => {
         const buttonValue = button.textContent;
         if (isEnteringSecondNumber) {
             secondNumber += buttonValue;
             updateDisplay(buttonValue);
-            console.log(secondNumber); // Debugging
         } else {
             firstNumber += buttonValue;
             updateDisplay(buttonValue);
-            console.log(firstNumber); // Debugging
         }
     })
 })
 
+// Register input from operator buttons and switch to second number
 operatorButtons.forEach(button => {
     button.addEventListener("click", () => {
         if (firstNumber === '') return;
@@ -76,12 +77,19 @@ operatorButtons.forEach(button => {
         operator = button.textContent;
         isEnteringSecondNumber = true;
         display.textContent = 0;
-
-        console.log(operator); // Debugging
-        console.log(isEnteringSecondNumber); // Debugging
     })
 })
 
+// Computes result when the user selects 'equals'
+equalsButton.addEventListener('click', () => {
+    const num1 = parseInt(firstNumber);
+    const num2 = parseInt(secondNumber);
+
+    const result = operate(num1, num2, operator);
+    display.textContent = result;
+})
+
+// Clears the display and number values
 clearButton.addEventListener('click', () => {
   firstNumber = '';
   operator = '';
