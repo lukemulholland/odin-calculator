@@ -49,27 +49,26 @@ function operate(firstNumber, secondNumber, operator) {
     }
 }
 
-const display = document.querySelector('#display');
-const numberButtons = document.querySelectorAll('.button-number');
-const operatorButtons = document.querySelectorAll('.button-operator');
-const clearButton = document.querySelector('#clear');
-const equalsButton = document.querySelector('#equals');
-
 // Register input from number buttons
+const numberButtons = document.querySelectorAll('.button-number');
+const display = document.querySelector('#display');
+
 numberButtons.forEach(button => {
     button.addEventListener("click", () => {
         const buttonValue = button.textContent;
         if (isEnteringSecondNumber) {
             secondNumber += buttonValue;
-            updateDisplay(buttonValue);
+            display.textContent = buttonValue;
         } else {
             firstNumber += buttonValue;
-            updateDisplay(buttonValue);
+            display.textContent = buttonValue;
         }
     })
 })
 
 // Register input from operator buttons and switch to second number
+const operatorButtons = document.querySelectorAll('.button-operator');
+
 operatorButtons.forEach(button => {
     button.addEventListener("click", () => {
         if (firstNumber === '') return;
@@ -81,15 +80,34 @@ operatorButtons.forEach(button => {
 })
 
 // Computes result when the user selects 'equals'
+const equalsButton = document.querySelector('#equals');
+
 equalsButton.addEventListener('click', () => {
+    if (firstNumber === '' || secondNumber === '' || operator === '') {
+        display.textContent = 'Error';
+        return;
+    } else if (secondNumber === '0' && operator === '/') {
+        display.textContent = 'Error - cannot divide by 0';
+        return; 
+    }
+
     const num1 = parseInt(firstNumber);
     const num2 = parseInt(secondNumber);
 
     const result = operate(num1, num2, operator);
-    display.textContent = result;
+    display.textContent = Number.isInteger(result) ? result : result.toFixed(4);
+
+    firstNumber = result;
+    secondNumber = '';
+    isEnteringSecondNumber = false;
+    console.log('firstNum: ' + firstNumber); // Debugging
+    console.log('secondNum: ' + secondNumber); // Debugging
+    console.log('result: ' + result); // Debugging
 })
 
 // Clears the display and number values
+const clearButton = document.querySelector('#clear');
+
 clearButton.addEventListener('click', () => {
   firstNumber = '';
   operator = '';
