@@ -1,3 +1,4 @@
+// Calculator functions
 function add(a, b) {
     if (typeof a !== 'number' || typeof b !== 'number') {
         throw new Error('Both arguments must be numbers');
@@ -34,7 +35,6 @@ let secondNumber = '';
 let operator = '';
 let isEnteringSecondNumber = false; // Tracks whether the user is entering the second number
 let operatorSet = false; // Tracks whether the user has selected an operator
-let decimilSelected = false; // Tracks whether the user has selected a decimil point
 
 function operate(firstNumber, secondNumber, operator) {
     switch (operator) {
@@ -57,16 +57,8 @@ const display = document.querySelector('#display');
 
 numberButtons.forEach(button => {
     button.addEventListener("click", () => {
-        const buttonValue = button.textContent;
-        if (isEnteringSecondNumber) {
-            secondNumber += buttonValue;
-            display.textContent = secondNumber;
-        } else {
-            firstNumber += buttonValue;
-            display.textContent = firstNumber;
-            console.log('firstNum: ' + firstNumber); // Debugging
-            console.log('secondNum: ' + secondNumber); // Debugging
-        }
+        const key = button.textContent;
+        handleNumber(key);
     })
 })
 
@@ -75,17 +67,8 @@ const operatorButtons = document.querySelectorAll('.button-operator');
 
 operatorButtons.forEach(button => {
     button.addEventListener("click", () => {
-        if (firstNumber === '') return; // Do nothing if missing first number
-
-        if (operatorSet) { // Replace current operator if already set
-            operator = button.textContent; 
-            display.textContent = operator;
-        } else {
-            operator = button.textContent;
-            operatorSet = true;
-            isEnteringSecondNumber = true;
-            display.textContent = operator;
-        }
+        const key = button.textContent;
+        handleOperator(key);
     })
 })
 
@@ -93,26 +76,72 @@ operatorButtons.forEach(button => {
 const decimalButton = document.querySelector('#decimal-point');
 
 decimalButton.addEventListener('click', () => {
-    // Prevent multiple decimal points in the same number
-    if (isEnteringSecondNumber) {
-        if (!secondNumber.includes('.')) {
-            secondNumber += '.';
-            display.textContent = secondNumber;
-        }
-    } else {
-        if (!firstNumber.includes('.')) {
-            firstNumber += '.';
-            display.textContent = firstNumber;
-        }
-    }
-    console.log('firstNum: ' + firstNumber); // Debugging
-    console.log('secondNum: ' + secondNumber); // Debugging
+    handleDecimalPoint();
 })
 
 // Computes result when the user selects 'equals'
 const equalsButton = document.querySelector('#equals');
-
 equalsButton.addEventListener('click', () => {
+    handleEquals();
+})
+
+// Clears the display and number values
+const clearButton = document.querySelector('#clear');
+clearButton.addEventListener('click', () => {
+    handleEscape();
+});
+
+// Handle keyboard input
+document.addEventListener("keydown", (event) => {
+    const key = event.key;
+    console.log(key);
+
+    if (!isNaN(key)) {
+        handleNumber(key);
+    }
+
+    if (["+", "-", "*", "/"].includes(key)) {
+        handleOperator(key);
+    }
+
+    if (key === 'Enter' || key === '=') {
+        handleEquals();
+    }
+
+    if (key === 'Escape') {
+        handleEscape();
+    }
+
+    if (key ==='.') {
+        handleDecimalPoint();
+    }
+});
+
+function handleNumber(key) {
+    if (isEnteringSecondNumber) {
+        secondNumber += key;
+        display.textContent = secondNumber;
+    } else {
+        firstNumber += key;
+        display.textContent = firstNumber;
+    }
+}
+
+function handleOperator(key) {
+    if (firstNumber === '') return; // Do nothing if missing first number
+
+    if (operatorSet) { // Replace current operator if already set
+        operator = key; 
+        display.textContent = key;
+    } else {
+        operator = key;
+        operatorSet = true;
+        isEnteringSecondNumber = true;
+        display.textContent = key;
+    }
+}
+
+function handleEquals() {
     if (firstNumber === '' || secondNumber === '' || operator === '') {
         display.textContent = 'Error';
         return;
@@ -131,25 +160,27 @@ equalsButton.addEventListener('click', () => {
     secondNumber = '';
     isEnteringSecondNumber = false;
     operatorSet = false;
-    console.log('firstNum: ' + firstNumber); // Debugging
-    console.log('secondNum: ' + secondNumber); // Debugging
-})
+}
 
-// Clears the display and number values
-const clearButton = document.querySelector('#clear');
+function handleEscape() {
+    firstNumber = '';
+    operator = '';
+    secondNumber = '';
+    isEnteringSecondNumber = false;
+    display.textContent = '0'; // Reset the display
+}
 
-clearButton.addEventListener('click', () => {
-  firstNumber = '';
-  operator = '';
-  secondNumber = '';
-  isEnteringSecondNumber = false;
-  display.textContent = '0'; // Reset the display
-});
-
-// function updateDisplay(value) {
-//     if (display.textContent === '0') {
-//         display.textContent = value;
-//     } else {
-//         display.textContent += value;
-//     }
-// }
+function handleDecimalPoint() {
+    // Prevent multiple decimal points in the same number
+    if (isEnteringSecondNumber) {
+        if (!secondNumber.includes('.')) {
+            secondNumber += '.';
+            display.textContent = secondNumber;
+        }
+    } else {
+        if (!firstNumber.includes('.')) {
+            firstNumber += '.';
+            display.textContent = firstNumber;
+        }
+    }
+}
