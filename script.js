@@ -60,10 +60,12 @@ numberButtons.forEach(button => {
         const buttonValue = button.textContent;
         if (isEnteringSecondNumber) {
             secondNumber += buttonValue;
-            display.textContent = buttonValue;
+            display.textContent = secondNumber;
         } else {
             firstNumber += buttonValue;
-            display.textContent = buttonValue;
+            display.textContent = firstNumber;
+            console.log('firstNum: ' + firstNumber); // Debugging
+            console.log('secondNum: ' + secondNumber); // Debugging
         }
     })
 })
@@ -87,6 +89,26 @@ operatorButtons.forEach(button => {
     })
 })
 
+// Register input from decimal point button
+const decimalButton = document.querySelector('#decimal-point');
+
+decimalButton.addEventListener('click', () => {
+    // Prevent multiple decimal points in the same number
+    if (isEnteringSecondNumber) {
+        if (!secondNumber.includes('.')) {
+            secondNumber += '.';
+            display.textContent = secondNumber;
+        }
+    } else {
+        if (!firstNumber.includes('.')) {
+            firstNumber += '.';
+            display.textContent = firstNumber;
+        }
+    }
+    console.log('firstNum: ' + firstNumber); // Debugging
+    console.log('secondNum: ' + secondNumber); // Debugging
+})
+
 // Computes result when the user selects 'equals'
 const equalsButton = document.querySelector('#equals');
 
@@ -99,11 +121,11 @@ equalsButton.addEventListener('click', () => {
         return; 
     }
 
-    const num1 = parseInt(firstNumber);
-    const num2 = parseInt(secondNumber);
+    const num1 = parseFloat(firstNumber);
+    const num2 = parseFloat(secondNumber);
 
     const result = operate(num1, num2, operator);
-    display.textContent = Number.isInteger(result) ? result : result.toFixed(4);
+    display.textContent = parseFloat(result.toFixed(4));
 
     firstNumber = result; // Store result in first number to allow for subsequent calculation
     secondNumber = '';
@@ -111,7 +133,6 @@ equalsButton.addEventListener('click', () => {
     operatorSet = false;
     console.log('firstNum: ' + firstNumber); // Debugging
     console.log('secondNum: ' + secondNumber); // Debugging
-    console.log('result: ' + result); // Debugging
 })
 
 // Clears the display and number values
@@ -125,10 +146,10 @@ clearButton.addEventListener('click', () => {
   display.textContent = '0'; // Reset the display
 });
 
-function updateDisplay(value) {
-    if (display.textContent === '0') {
-        display.textContent = value;
-    } else {
-        display.textContent += value;
-    }
-}
+// function updateDisplay(value) {
+//     if (display.textContent === '0') {
+//         display.textContent = value;
+//     } else {
+//         display.textContent += value;
+//     }
+// }
