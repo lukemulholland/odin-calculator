@@ -112,8 +112,12 @@ document.addEventListener("keydown", (event) => {
         handleEscape();
     }
 
-    if (key ==='.') {
+    if (key === '.') {
         handleDecimalPoint();
+    }
+
+    if (key === 'Backspace') {
+        handleBackspace();
     }
 });
 
@@ -125,6 +129,7 @@ function handleNumber(key) {
         firstNumber += key;
         display.textContent = firstNumber;
     }
+    console.log(firstNumber);
 }
 
 function handleOperator(key) {
@@ -182,5 +187,15 @@ function handleDecimalPoint() {
             firstNumber += '.';
             display.textContent = firstNumber;
         }
+    }
+}
+
+function handleBackspace() {
+    if (isEnteringSecondNumber) {
+        secondNumber = secondNumber.slice(0,-1);
+        display.textContent = secondNumber;
+    } else {
+        firstNumber = firstNumber.slice(0,-1);
+        display.textContent = firstNumber;
     }
 }
